@@ -1,0 +1,21 @@
+<html>
+<body bgcolor="aqua">
+<center><h1> hover over image</h2>
+<img id="pic"  src="/home/ksb/Desktop/sinu1sem/sinu_html/javascript/pic1.jpeg" onmouseover="change()" onmouseout="reset()"/>
+<p id="text" >This is  first image</p>
+<script>
+function change()
+{
+document.getElementById("pic").src="/home/ksb/Desktop/sinu1sem/sinu_html/javascript/pic2.jpeg";
+document.getElementById("text").innerHTML="This is second image";
+}
+function reset()
+{
+document.getElementById("pic").src="/home/ksb/Desktop/sinu1sem/sinu_html/javascript/pic1.jpeg";
+document.getElementById("text").innerHTML="This is first image";
+}
+</script>
+</center>
+</body>
+</html>
+
