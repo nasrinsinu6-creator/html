@@ -152,7 +152,7 @@
         return;
     }
 
-    // Remove score for current question if previously answered correctly
+
     const selected = document.querySelector('input[name="option"]:checked');
     if (selected) {
         if (parseInt(selected.value) === questions[current].answer) {
@@ -171,24 +171,23 @@
 }
 
 
-
-   function nextQuestion() {
+function nextQuestion() {
     const selected = document.querySelector('input[name="option"]:checked');
     
     if (selected) {
-        localStorage.setItem('q' + current, selected.value); // save answer
+        localStorage.setItem('q' + current, selected.value); 
         if (parseInt(selected.value) === questions[current].answer) {
             score++;
         }
     } else {
-        localStorage.setItem('q' + current, null); // mark as skipped
+        localStorage.setItem('q' + current, null); 
     }
 
     current++;
     if (current < questions.length) {
         showQuestion();
 
-        // Restore previously selected answer if exists
+
         const prevSelected = localStorage.getItem('q' + current);
         if (prevSelected !== null && prevSelected !== "null") {
             document.getElementById("opt" + prevSelected).checked = true;
@@ -197,9 +196,7 @@
         endQuiz(false);
     }
 }
-
-
-  function endQuiz(autoSubmitted) {
+function endQuiz(autoSubmitted) {
     endTime = new Date();
     clearInterval(timerInterval);
 
