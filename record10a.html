@@ -11,18 +11,16 @@
     background: #fff;
     padding: 25px 40px;
     border-radius: 10px;
-`1
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
   }
   #timer {
     font-size: 22px;
-    color: #d32f2f;
-    font-weight: bold;
-    margin-bottom: 15px;
-    text-align: right;
+    color: red;
+    text-align: center;
   }
   #question {
     font-weight: bold;
-    margin-bottom: 10px;
+
   }
   input[type="radio"] {
     margin: 8px 0;
@@ -31,7 +29,7 @@
     margin-top: 15px;
     padding: 8px 18px;
     cursor: pointer;
-    background: #1976d2;
+    background: red;
     color: white;
     border: none;
     border-radius: 5px;
@@ -39,8 +37,7 @@
   
   #result {
     font-size: 18px;
-    color: #222;
-    margin-top: 25px;
+    color: blue;
     text-align: center;
   }
 </style>
@@ -57,7 +54,7 @@
     <input type="radio" name="option" value="1" id="opt1"> <label id="lbl1"></label><br>
     <input type="radio" name="option" value="2" id="opt2"> <label id="lbl2"></label><br>
     <input type="radio" name="option" value="3" id="opt3"> <label id="lbl3"></label><br><br>
-
+    <button type="button" onclick="prevQuestion()">Previous</button>
     <button type="button" onclick="nextQuestion()">Next</button>
   </form>
 
@@ -149,25 +146,58 @@
       }
     }, 1000);
   }
-
-  function nextQuestion() {
-    const selected = document.querySelector('input[name="option"]:checked');
-    if (!selected) {
-      alert("Please choose an answer!");
-      return;
+  function prevQuestion() {
+    if (current === 0) {
+        alert("This is the first question.");
+        return;
     }
 
-    if (parseInt(selected.value) === questions[current].answer) {
-      score++;
+    // Remove score for current question if previously answered correctly
+    const selected = document.querySelector('input[name="option"]:checked');
+    if (selected) {
+        if (parseInt(selected.value) === questions[current].answer) {
+            score--; 
+        }
+    }
+
+    current--;
+    showQuestion();
+
+    // Restore previous selection
+    const prevSelected = localStorage.getItem('q' + current);
+    if (prevSelected !== null && prevSelected !== "null") {
+        document.getElementById("opt" + prevSelected).checked = true;
+    }
+}
+
+
+
+   function nextQuestion() {
+    const selected = document.querySelector('input[name="option"]:checked');
+    
+    if (selected) {
+        localStorage.setItem('q' + current, selected.value); // save answer
+        if (parseInt(selected.value) === questions[current].answer) {
+            score++;
+        }
+    } else {
+        localStorage.setItem('q' + current, null); // mark as skipped
     }
 
     current++;
     if (current < questions.length) {
-      showQuestion();
+        showQuestion();
+
+        // Restore previously selected answer if exists
+        const prevSelected = localStorage.getItem('q' + current);
+        if (prevSelected !== null && prevSelected !== "null") {
+            document.getElementById("opt" + prevSelected).checked = true;
+        }
     } else {
-      endQuiz(false);
+        endQuiz(false);
     }
-  }
+}
+
 
   function endQuiz(autoSubmitted) {
     endTime = new Date();
