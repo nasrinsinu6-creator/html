@@ -2,79 +2,115 @@
 <html>
 <head>
   <title>Registration Form</title>
-  <script>
-    function validateForm() {
 
-      var name = document.forms["regForm"]["name"].value.trim();
-      var email = document.forms["regForm"]["email"].value.trim();
-      var password = document.forms["regForm"]["password"].value.trim();
-      var phone = document.forms["regForm"]["phone"].value.trim();
-      var gender = document.forms["regForm"]["gender"].value;
-
-
-      if (name == "") {
-        alert("Please enter your name.");
-        return false;
-      }
-
-
-      var emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
-      if (email == "") {
-        alert("Please enter your email.");
-        return false;
-      } else if (!email.match(emailPattern)) {
-        alert("Please enter a valid email address.");
-        return false;
-      }
-
-
-      if (password == "") {
-        alert("Please enter your password.");
-        return false;
-      } else if (password.length < 6) {
-        alert("Password must be at least 6 characters long.");
-        return false;
-      }
-
-
-      var phonePattern = /^[0-9]{10}$/;
-      if (phone == "") {
-        alert("Please enter your phone number.");
-        return false;
-      } else if (!phone.match(phonePattern)) {
-        alert("Please enter a valid 10-digit phone number.");
-        return false;
-      }
-
-
-      if (!gender) {
-        alert("Please select your gender.");
-        return false;
-      }
-
-      alert("Form submitted successfully!");
-      return true; // allow submission
+  <style>
+    .error {
+      color: red;
+      font-size: 14px;
     }
+  </style>
+
+  <script>
+    function validateName() {
+      var name = document.getElementById("name").value.trim();
+      var msg = document.getElementById("nameError");
+
+      if (name === "") {
+        msg.innerHTML = "Please enter your name.";
+      } else {
+        msg.innerHTML = "";
+      }
+    }
+
+    function validateEmail() {
+      var email = document.getElementById("email").value.trim();
+      var msg = document.getElementById("emailError");
+      var pattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+      if (!email.match(pattern)) {
+        msg.innerHTML = "Enter a valid email.";
+      } else {
+        msg.innerHTML = "";
+      }
+    }
+
+    function validatePassword() {
+      var password = document.getElementById("password").value;
+      var msg = document.getElementById("passError");
+
+      if (password.length < 6) {
+        msg.innerHTML = "Password must be at least 6 characters.";
+      } else {
+        msg.innerHTML = "";
+      }
+    }
+
+    function validatePhone() {
+      var phone = document.getElementById("phone").value.trim();
+      var msg = document.getElementById("phoneError");
+      var pattern = /^[0-9]{10}$/;
+
+      if (!phone.match(pattern)) {
+        msg.innerHTML = "Enter a valid 10-digit phone number.";
+      } else {
+        msg.innerHTML = "";
+      }
+    }
+
+    function validateForm() {
+      validateName();
+      validateEmail();
+      validatePassword();
+      validatePhone();
+
+      let errors = document.querySelectorAll(".error");
+      for (let e of errors) {
+        if (e.innerHTML !== "") {
+          alert("Please fix the errors before submitting.");
+          return false;
+        }
+      }
+      alert("Form submitted successfully!");
+      return true;
+    }
+
   </script>
+
 </head>
 
 <body bgcolor="pink">
   <center><h1><u>REGISTRATION FORM</u></h1></center>
-  <form name="regForm" onsubmit="return validateForm()">
-    Name: <input type="text" name="name"><br><br>
 
-    Email ID: <input type="email" name="email"><br><br>
+  <form onsubmit="return validateForm()">
 
-    Password: <input type="password" name="password"><br><br>
+    Name:
+    <input type="text" id="name" onblur="validateName()"><br>
+    <span class="error" id="nameError"></span>
+    <br><br>
 
-    Date of Birth: <input type="date" name="dob"><br><br>
+    Email ID:
+    <input type="email" id="email" onblur="validateEmail()"><br>
+    <span class="error" id="emailError"></span>
+    <br><br>
 
-    Phone Number: <input type="text" name="phone"><br><br>
+    Password:
+    <input type="password" id="password" onblur="validatePassword()"><br>
+    <span class="error" id="passError"></span>
+    <br><br>
 
-    Address: <textarea name="address" rows="2" cols="30"></textarea><br><br>
+    Date of Birth:
+    <input type="date" id="dob"><br><br>
+
+    Phone Number:
+    <input type="text" id="phone" onblur="validatePhone()"><br>
+    <span class="error" id="phoneError"></span>
+    <br><br>
+
+    Address:
+    <textarea id="address" rows="2" cols="30"></textarea><br><br>
 
     Course:
-    <select name="course">
+    <select id="course">
       <option value="MCA">MCA</option>
       <option value="MBA">MBA</option>
       <option value="B.Tech">B.Tech</option>
@@ -87,18 +123,12 @@
     <input type="radio" name="gender" value="Other">Other
     <br><br>
 
-    Languages Known:
-    <input type="checkbox" name="lang" value="Malayalam">Malayalam
-    <input type="checkbox" name="lang" value="Hindi">Hindi
-    <input type="checkbox" name="lang" value="English">English
-    <input type="checkbox" name="lang" value="French">French
-    <br><br>
-
     <center>
       <input type="submit" value="Submit">
       <input type="reset" value="Reset">
     </center>
+
   </form>
+
 </body>
 </html>
-
