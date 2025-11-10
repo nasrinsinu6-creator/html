@@ -163,7 +163,7 @@
     current--;
     showQuestion();
 
-    // Restore previous selection
+    
     const prevSelected = localStorage.getItem('q' + current);
     if (prevSelected !== null && prevSelected !== "null") {
         document.getElementById("opt" + prevSelected).checked = true;
@@ -226,4 +226,3 @@ function endQuiz(autoSubmitted) {
 
 </body>
 </html>
-
