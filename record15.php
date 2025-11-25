@@ -1,35 +1,63 @@
+<?php
 
+$players = [
+    "Rohit Sharma",
+    "Virat Kohli",
+    "Ravindra Jadeja",
+    "Jasprit Bumrah",
+    "KL Rahul"
+];
+
+$positions = [
+    "Batsman (Captain)",
+    "Batsman",
+    "All-Rounder",
+    "Bowler",
+    "Wicket Keeper/Batsman"
+];
+
+?>
 <html>
-<body> 
+<head>
+    <title>Indian Cricket Players</title>
+    <style>
+        table {
+            width: 60%;
+            margin: auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid black;
+            text-align: center;
+        }
+        th {
+            background-color: #0275d8;
+            color: white;
+        }
+    </style>
+</head>
+<body>
 
-<?php
-$players = array("Rohit Sharma", "Virat Kohli", "Jasprit Bumrah", "KL Rahul", "Ravindra Jadeja");
-$player_no = array("45", "18", "93", "34", "8");
-$position = array("top-order batsman", "off-spin", "right-arm fast bowler", "wicket-keeper", "left-handed batting all-rounder");
-?>
+<h2 style="text-align:center; color:green;">Indian Cricket Players & Positions</h2>
 
-<h2 style="color:red; padding-left:250px" >Indian Cricket Players</h2>
+<table>
+    <tr>
+        <th>SI No.</th>
+        <th>Player Name</th>
+        <th>Position</th>
+    </tr>
 
-<table border="1" width="50%">
-<tr>
-<th  width="20%" align="center">Player No</th>
-<th>Player Name</th>
-<th>position</th>
-
-</tr>
-
-<?php
-// Use one loop and match both arrays by index
-for ($i = 0; $i < count($players); $i++) {
-echo "<tr>";
-echo "<td align=center>" . $player_no[$i] . "</td>";
-echo "<td align=center>" . $players[$i] . "</td>";
-echo "<td align=center>" . $position[$i] . "</td>";
-echo "</tr>";
-}
-?>
+    <?php
+    for ($i = 0; $i < count($players); $i++) {
+        echo "<tr>";
+        echo "<td>" . ($i + 1) . "</td>";         
+        echo "<td>" . $players[$i] . "</td>";     
+        echo "<td>" . $positions[$i] . "</td>";  
+        echo "</tr>";
+    }
+    ?>
 </table>
 
 </body>
 </html>
-
