@@ -63,6 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <tr><td><strong>Consumer No:</strong> C#$consumerId</td></tr>
                 <tr><td><strong>Name:</strong> $name</td></tr>
                 <tr><td><strong>Bill Period:</strong> $billFromDate to $billToDate</td></tr>
+                <tr><td><strong>Issued Date:</strong>$billToDate</td></tr>
 
             </table>
 
