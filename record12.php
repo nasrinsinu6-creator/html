@@ -1,108 +1,85 @@
-<?php
-
-$name = $email = $password = $confirm_password = $phone = "";
-$errors = [];
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-function clean_input($data) {
-    return htmlspecialchars(stripslashes(trim($data)));
-}
-
-if (empty($_POST["name"])) {
-    $errors['name'] = "Name is required<br>";
-} else {
-    $name = clean_input($_POST["name"]);
-    if (!preg_match("/^[a-zA-Z ]*$/", $name)) {
-        $errors['name'] = "Only letters and spaces allowed<br>";
-    }
-}
-
-if (empty($_POST["email"])) {
-    $errors['email'] = "Email is required<br>";
-} else {
-    $email = clean_input($_POST["email"]);
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors['email'] = "Invalid email format<br>";
-    }
-}
-
-
-
-if (empty($_POST["password"])) {
-    $errors['password'] = "Password is required<br>";
-} else {
-    $password = clean_input($_POST["password"]);
-    if (strlen($password) < 6) {
-        $errors['password'] = "Password must be at least 6 characters<br>";
-    }
-}
-
-if (empty($_POST["confirm_password"])) {
-    $errors['confirm_password'] = "Confirm your password<br>";
-} else {
-    $confirm_password = clean_input($_POST["confirm_password"]);
-    if ($confirm_password !== $password) {
-        $errors['confirm_password'] = "Passwords do not match<br>";
-    }
-}
-if (empty($_POST["phone"])) {
-    $errors['phone'] = "Phone number is required<br>";
-} else {
-    $phone = clean_input($_POST["phone"]);
-    if (!preg_match("/^[0-9]{10,15}$/", $phone)) {
-        $errors['phone'] = "Phone must be 10–15 digits<br>";
-    }
-}
-
-if (empty($errors)) {
-    echo "<h1 style='color:green; text-align:center;'>Registration Successful!</h1>";
-}
-
-}
-?>
+<!DOCTYPE html>
 <html>
 <head>
-<title>PHP Registration Form</title>
+<title>KSEB Bill</title>
 <style>
-.error { color: red; }
-form { width: 350px; margin: auto; }
-input { width: 100%; margin: 11px 0; padding: 7px; }
+.form-container { width: 350px; margin: 20px auto; padding: 20px; border: 1px solid #ccc; }
+label { display: block; margin-bottom: 5px; }
+input[type="text"], input[type="number"] { width: 90%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; }
+input[type="submit"] { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; cursor: pointer; }
+.bill-container { width: 500px; margin: 20px auto; padding: 15px; border: 1px solid #ccc; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 6px; text-align: left; border: 1px solid #ccc; }
+.header { text-align: center; margin-bottom: 10px; }
+.right-align { text-align: right; }
+.center-align {text-align: center;}
 </style>
 </head>
 <body>
 
-<h2 style="text-align:center; color:blue";>Registration Form</h2>
+<div class="form-container">
+  <h2>KSEB Bill</h2>
+  <form method="post" action="">
+    <label for="name">Name:</label>
+    <input type="text" name="name" id="name" required>
+    <label for="consumerId">Consumer ID:</label>
+    <input type="text" name="consumerId" id="consumerId" required>
+    <label for="currentReading">Unit consumed:</label>
+    <input type="number" name="currentReading" id="currentReading" required>
+    <input type="submit" value="Generate">
+  </form>
+</div>
 
-<form method="POST" action="">
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = $_POST["name"];
+    $consumerId = $_POST["consumerId"];
+    $unitConsumed = $_POST["currentReading"];
 
-<label style="color:brown";>Name:</label>
-<input type="text" name="name" value="<?= $name ?>">
-<span class="error"><?= $errors['name'] ?? '' ?></span>
+    if ($unitConsumed <= 300) {
+        $energyCharges = $unitConsumed * 6.40;
+    } elseif ($unitConsumed <= 350) {
+        $energyCharges = $unitConsumed * 7.25;
+    } elseif ($unitConsumed <= 400) {
+        $energyCharges = $unitConsumed * 7.60;
+    } elseif ($unitConsumed <= 500) {
+        $energyCharges = $unitConsumed * 7.90;
+    } else {
+        $energyCharges = $unitConsumed * 8.80;
+    }
 
-<label style="color:brown";>Email:</label>
-<input type="text" name="email" value="<?= $email ?>">
-<span class="error"><?= $errors['email'] ?? '' ?></span>
+    $otherCharges = 60.00;
+    $totalAmount = $energyCharges + $otherCharges;
 
-<label style="color:brown";>Phone:</label>
-<input type="text" name="phone" value="<?= $phone ?>">
-<span class="error"><?= $errors['phone'] ?? '' ?></span>
+    echo "<div class='bill-container'>
+            <div class='header'>
+                <h2>KSEB</h2>
+                <h3>ELECTRICITY BILL</h3>
+            </div>
+            <table>
+                <tr><td><strong>Consumer No:</strong> C#$consumerId</td></tr>
+                <tr><td><strong>Name:</strong> $name</td></tr>
+                <tr><td><strong>Due Date:</strong> " . date("d/m/Y", strtotime("+15 days")) . "</td></tr>
+            </table>
 
-<label style="color:brown";>Password:</label>
-<input type="password" name="password">
-<span class="error"><?= $errors['password'] ?? '' ?></span>
+            <table>
+                <tr>
+                    <th class='center-align'>Consumption</th>
+                </tr>
+                <tr>
+                    <td class='center-align'>$unitConsumed</td>
+                </tr>
+            </table>
 
-<label style="color:brown";>Confirm Password:</label>
-<input type="password" name="confirm_password">
-<span class="error"><?= $errors['confirm_password'] ?? '' ?></span>
+            <table>
+                <tr><td><strong>Energy Charges:</strong></td><td class='right-align'>" . number_format($energyCharges, 2) . "</td></tr>
+                <tr><td><strong>Other Charges:</strong></td><td class='right-align'>" . number_format($otherCharges, 2) . "</td></tr>
+                <tr><td><strong>Total Payable:</strong></td><td class='right-align'>" . number_format($totalAmount, 2) . "</td></tr>
+            </table>
 
-<label style="color:brown";>Phone:</label>
-<input type="text" name="phone" value="<?= $phone ?>">
-<span class="error"><?= $errors['phone'] ?? '' ?></span>
+        </div>";
+}
+?>
 
-
-<br><br>
-<input type="submit" value="Register" style="background-color:pink";>
-
-</form>
-
+</body>
+</html>
